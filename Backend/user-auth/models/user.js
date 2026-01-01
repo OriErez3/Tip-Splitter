@@ -15,12 +15,22 @@ const UserSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
-    }
+    },
+    recipts: [
+        { type: mongoose.Schema.Types.ObjectId, ref: "Recipt" }
+    ],
+        
+    
 });
 
 UserSchema.pre('save', async function (next){
+    try{
     if (!this.isModified("password")) return next();
     this.password = await bcrypt.hash(this.password, 10);
+    return next()
+    } catch(err){
+        return next(err);
+    }
 });
 
-module.exports = mongoose.model('User', UserSchema); 
+module.exports = mongoose.models.User || mongoose.model('User', UserSchema);

@@ -3,8 +3,10 @@ const ParticipantSchema = require("./participant");
 
 const ReciptSchema = new mongoose.Schema({
     ownerID: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
         required: true,
+        index: true
     },
     title: {
         type: String,
@@ -34,7 +36,7 @@ const ReciptSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-
-
-})
-module.exports = mongoose.model('Recipt', ReciptSchema); 
+},
+    { timestamps: true }
+)
+module.exports = mongoose.models.Recipt || mongoose.model('Recipt', ReciptSchema);

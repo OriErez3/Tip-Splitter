@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
+const ParticipantSchema = require("./participant");
 
 const ReciptSchema = new mongoose.Schema({
     ownerID: {
         type: String,
         required: true,
-        unique: true
     },
     title: {
         type: String,
@@ -14,26 +14,27 @@ const ReciptSchema = new mongoose.Schema({
         type: Date,
         required: true
     },
-    particpants: {
-        type: Array,
+    participants: {
+        type: [ParticipantSchema],
         required: true
     },
-    items: {
-        type: Array,
-        required: false
+    appetizerSubtotal: {
+        type: Number,
+        default: 0 
     },
     subTotal: {
-        type: Double,
-        required: true
+        type: Number,
+        required: false
     },
     tax: {
-        type: Double,
+        type: Number,
         required: true
     },
     tip: {
-        type: Double,
+        type: Number,
         required: true
     },
 
 
 })
+module.exports = mongoose.model('Recipt', ReciptSchema); 

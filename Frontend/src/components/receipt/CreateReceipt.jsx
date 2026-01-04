@@ -31,14 +31,20 @@ const CreateReceipt = () => {
       setLoading(true);
       const receipts = await receiptService.getMyReceipts();
       const receipt = receipts.find(r => r._id === id);
-      
+
       if (receipt) {
         setTitle(receipt.title);
         setDate(new Date(receipt.date).toISOString().split('T')[0]);
         setAppetizerSubtotal(receipt.appetizerSubtotal || 0);
-        setTax(receipt.tax);
-        setTip(receipt.tip);
         setParticipants(receipt.participants);
+
+        // Convert stored tax rate back to dollar amount for display
+        const mealTotal = receipt.participants.reduce((sum, p) => sum + (p.mealSubtotal || 0), 0);
+        const subtotal = mealTotal + (receipt.appetizerSubtotal || 0);
+        setTax(subtotal > 0 ? (receipt.tax * subtotal).toFixed(2) : 0);
+
+        // Convert stored tip rate back to percentage for display
+        setTip(receipt.tip > 0 ? (receipt.tip * 100).toFixed(2) : 0);
       } else {
         setError('Receipt not found');
       }
@@ -67,7 +73,11 @@ const CreateReceipt = () => {
 
   const calculateTotal = () => {
     const mealTotal = participants.reduce((sum, p) => sum + (parseFloat(p.mealSubtotal) || 0), 0);
-    const total = mealTotal + parseFloat(appetizerSubtotal || 0) + parseFloat(tax || 0) + parseFloat(tip || 0);
+    const subtotal = mealTotal + parseFloat(appetizerSubtotal || 0);
+    const taxAmount = parseFloat(tax || 0);
+    const tipPercentage = parseFloat(tip || 0) / 100;
+    const tipAmount = subtotal * tipPercentage;
+    const total = subtotal + taxAmount + tipAmount;
     return total.toFixed(2);
   };
 
@@ -105,12 +115,24 @@ const CreateReceipt = () => {
     setLoading(true);
 
     try {
+      // Calculate subtotal for tax rate calculation
+      const mealTotal = participants.reduce((sum, p) => sum + (parseFloat(p.mealSubtotal) || 0), 0);
+      const subtotal = mealTotal + (parseFloat(appetizerSubtotal) || 0);
+
+      // Calculate tax rate from absolute tax amount
+      const taxAmount = parseFloat(tax) || 0;
+      const taxRate = subtotal > 0 ? taxAmount / subtotal : 0;
+
+      // Convert tip percentage to decimal rate
+      const tipPercentage = parseFloat(tip) || 0;
+      const tipRate = tipPercentage / 100;
+
       const receiptData = {
         title,
         date,
         appetizerSubtotal: parseFloat(appetizerSubtotal) || 0,
-        tax: parseFloat(tax) || 0,
-        tip: parseFloat(tip) || 0,
+        tax: taxRate,  // Store as rate (e.g., 0.08875)
+        tip: tipRate,  // Store as rate (e.g., 0.20)
         participants: participants.map(p => ({
           name: p.name,
           mealSubtotal: parseFloat(p.mealSubtotal) || 0,
@@ -211,7 +233,7 @@ const CreateReceipt = () => {
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="tax">Tax</label>
+                <label htmlFor="tax">Tax (Total $)</label>
                 <input
                   type="number"
                   id="tax"
@@ -226,13 +248,13 @@ const CreateReceipt = () => {
               </div>
 
               <div className={styles.formGroup}>
-                <label htmlFor="tip">Tip</label>
+                <label htmlFor="tip">Tip (%)</label>
                 <input
                   type="number"
                   id="tip"
                   value={tip}
                   onChange={(e) => setTip(e.target.value)}
-                  placeholder="0.00"
+                  placeholder="20"
                   step="0.01"
                   min="0"
                   required

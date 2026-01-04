@@ -3,7 +3,7 @@ import split from '../../utils/split';
 import styles from './ReceiptCard.module.css';
 
 const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
-  const [expandedPerson, setExpandedPerson] = useState(null);
+  const [expandedPeople, setExpandedPeople] = useState(new Set());
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this receipt?')) {
@@ -39,7 +39,15 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
     : [];
 
   const togglePerson = (index) => {
-    setExpandedPerson(expandedPerson === index ? null : index);
+    setExpandedPeople(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
   };
 
   const handleEdit = () => {
@@ -88,7 +96,7 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
               <span className={styles.personAmount}>${person.total.toFixed(2)}</span>
             </div>
 
-            {expandedPerson === index && (
+            {expandedPeople.has(index) && (
               <div className={styles.breakdown}>
                 <div className={styles.breakdownRow}>
                   <span>Meal Subtotal</span>

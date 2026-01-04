@@ -38,6 +38,10 @@ const Dashboard = () => {
     }
   };
 
+  const handleEditReceipt = (receiptId) => {
+    navigate(`/edit-receipt/${receiptId}`);
+  };
+
   return (
     <>
       <Navbar />
@@ -66,7 +70,7 @@ const Dashboard = () => {
         {!loading && !error && receipts.length > 0 && (
           <div className={styles.grid}>
             {receipts.map((receipt) => (
-              <ReceiptCard key={receipt._id} receipt={receipt} onDelete={handleDeleteReceipt} />
+              <ReceiptCard key={receipt._id} receipt={receipt} onDelete={handleDeleteReceipt}  onEdit={handleEditReceipt}/>
             ))}
           </div>
         )}

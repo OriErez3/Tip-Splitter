@@ -36,7 +36,17 @@ function AppRoutes() {
           </PrivateRoute>
         }
       />
+        <Route 
+    path="/edit-receipt/:id" 
+    element={
+      <PrivateRoute>
+        <CreateReceipt />
+      </PrivateRoute>
+    } 
+  />
     </Routes>
+
+    
   );
 }
 

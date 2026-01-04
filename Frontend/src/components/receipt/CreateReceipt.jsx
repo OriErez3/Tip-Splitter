@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import receiptService from '../../services/receiptService';
 import ParticipantInput from './ParticipantInput';
 import Navbar from '../common/Navbar';
@@ -7,6 +7,8 @@ import styles from './CreateReceipt.module.css';
 
 const CreateReceipt = () => {
   const navigate = useNavigate();
+  const { id } = useParams();  
+  const isEditMode = !!id;
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
   const [appetizerSubtotal, setAppetizerSubtotal] = useState(0);
@@ -18,6 +20,35 @@ const CreateReceipt = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (isEditMode) {
+      loadReceipt();
+    }
+  }, [id]);
+
+    const loadReceipt = async () => {
+    try {
+      setLoading(true);
+      const receipts = await receiptService.getMyReceipts();
+      const receipt = receipts.find(r => r._id === id);
+      
+      if (receipt) {
+        setTitle(receipt.title);
+        setDate(new Date(receipt.date).toISOString().split('T')[0]);
+        setAppetizerSubtotal(receipt.appetizerSubtotal || 0);
+        setTax(receipt.tax);
+        setTip(receipt.tip);
+        setParticipants(receipt.participants);
+      } else {
+        setError('Receipt not found');
+      }
+    } catch (err) {
+      setError('Failed to load receipt');
+    } finally {
+      setLoading(false);
+    }
+  };
+  
   const handleParticipantChange = (index, updatedParticipant) => {
     const newParticipants = [...participants];
     newParticipants[index] = updatedParticipant;
@@ -86,11 +117,15 @@ const CreateReceipt = () => {
           includeApps: p.includeApps
         }))
       };
+      if (isEditMode) {
+        await receiptService.updateReceipt(id, receiptData);
+      } else {
+        await receiptService.createReceipt(receiptData);
+      }
 
-      await receiptService.createReceipt(receiptData);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to create receipt. Please try again.');
+      setError(err.response?.data?.message || `Failed to ${isEditMode ? 'update' : 'create'} receipt`);
     } finally {
       setLoading(false);
     }
@@ -101,7 +136,7 @@ const CreateReceipt = () => {
       <Navbar />
       <div className={styles.container}>
         <div className={styles.header}>
-          <h1 className={styles.title}>Create New Receipt</h1>
+          <h1 className={styles.title}>{isEditMode ? 'Edit Receipt' : 'Create New Receipt'}</h1>
         </div>
 
         {error && <div className={styles.error}>{error}</div>}
@@ -221,7 +256,7 @@ const CreateReceipt = () => {
               Cancel
             </button>
             <button type="submit" className={styles.submitBtn} disabled={loading}>
-              {loading ? 'Creating...' : 'Create Receipt'}
+              {loading ? (isEditMode ? 'Updating...' : 'Creating...') : (isEditMode ? 'Update Receipt' : 'Create Receipt')}
             </button>
           </div>
         </form>

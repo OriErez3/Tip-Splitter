@@ -191,6 +191,11 @@
   gap: 15px;
 }
 
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+}
+
 .deleteBtn {
   background: #ff4444;
   color: white;
@@ -204,5 +209,21 @@
 
 .deleteBtn:hover {
   background: #cc0000;
+  transform: scale(1.1);
+}
+
+.editBtn {
+  background: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.editBtn:hover {
+  background: #45a049;
   transform: scale(1.1);
 }

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import split from '../../utils/split';
 import styles from './ReceiptCard.module.css';
 
-const ReceiptCard = ({ receipt, onDelete }) => {
+const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
   const [expandedPerson, setExpandedPerson] = useState(null);
 
   const handleDelete = async () => {
@@ -35,6 +35,10 @@ const ReceiptCard = ({ receipt, onDelete }) => {
     setExpandedPerson(expandedPerson === index ? null : index);
   };
 
+  const handleEdit = () => {
+    onEdit(receipt._id);
+  };
+
   return (
     <div className={styles.card}>
       <div className={styles.header}>
@@ -42,16 +46,26 @@ const ReceiptCard = ({ receipt, onDelete }) => {
           <h3 className={styles.title}>{receipt.title}</h3>
           <p className={styles.date}>{formatDate(receipt.date)}</p>
         </div>
-        <div className={styles.total}>
-          <span className={styles.totalLabel}>Total</span>
-          <span className={styles.totalAmount}>${calculateTotal()}</span>
+        <div className={styles.headerRight}>
+          <div className={styles.total}>
+            <span className={styles.totalLabel}>Total</span>
+            <span className={styles.totalAmount}>${calculateTotal()}</span>
+          </div>
+          <div className={styles.buttonGroup}>
+            <button
+              className={styles.editBtn}
+              onClick={handleEdit}
+              title="Edit receipt">
+              ✏️
+            </button>
+            <button
+              className={styles.deleteBtn}
+              onClick={handleDelete}
+              title="Delete receipt">
+              🗑️
+            </button>
+          </div>
         </div>
-        <button
-        className={styles.deleteBtn}
-        onClick={handleDelete}
-        title="Delete receipt">
-          🗑️
-        </button>
       </div>
 
       <div className={styles.divider}></div>

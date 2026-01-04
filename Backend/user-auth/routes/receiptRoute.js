@@ -24,6 +24,34 @@ router.post("/", auth, async (req, res) => {
     }
 });
 
+router.put("/:id", auth, async (req,res) =>{
+  try{
+  const receiptID = req.params.id;
+  const receiptData = req.body;
+
+  const receipt = await Receipt.findById(receiptID);
+
+  if (!receipt){
+    return res.status(404).json({ message: "Receipt not found" });
+  }
+
+  if (receipt.ownerID.toString() !== req.user.id){
+      return res.status(403).json({ message: "Not authorized to edit this."})
+    }
+  const updatedReceipt = await Receipt.findByIdAndUpdate(
+    receiptID,
+    receiptData,
+  { new: true, runValidators: true }
+);
+
+res.json(updatedReceipt);
+} catch (err) {
+  res.status(500).json({ message: "Couldn't edit receipt.", err});
+}
+
+
+});
+
 router.delete("/:id", auth, async (req,res) =>{
   try {
     const receiptID = req.params.id;
@@ -56,6 +84,25 @@ router.get("/mine", auth, async (req, res) => {
     res.json(receipts);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch receipts", err });
+  }
+});
+
+router.get("/:id", auth, async (req, res) => {
+  try {
+    const receiptID = req.params.id;
+    const receipt = await Receipt.findById(receiptID);
+
+    if (!receipt) {
+      return res.status(404).json({ message: "Receipt not found" });
+    }
+
+    if (receipt.ownerID.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized to view this receipt" });
+    }
+
+    res.json(receipt);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch receipt", err });
   }
 });
 

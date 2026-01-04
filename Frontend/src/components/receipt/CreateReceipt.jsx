@@ -62,7 +62,7 @@ const CreateReceipt = () => {
   };
 
   const handleAddParticipant = () => {
-    setParticipants([...participants, { name: '', mealSubtotal: 0, includeApps: true }]);
+    setParticipants([...participants, { name: '', mealSubtotal: '', includeApps: true }]);
   };
 
   const handleRemoveParticipant = (index) => {

@@ -52,6 +52,22 @@
   color: #667eea;
 }
 
+.deleteBtn {
+  background: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  font-size: 1.2em;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.deleteBtn:hover {
+  background: #cc0000;
+  transform: scale(1.1);
+}
+
 .divider {
   height: 2px;
   background: linear-gradient(to right, #667eea, #764ba2);

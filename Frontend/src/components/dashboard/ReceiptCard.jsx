@@ -2,7 +2,7 @@ import { useState } from 'react';
 import split from '../../utils/split';
 import styles from './ReceiptCard.module.css';
 
-const ReceiptCard = ({ receipt }) => {
+const ReceiptCard = ({ receipt, onDelete }) => {
   const [expandedPerson, setExpandedPerson] = useState(null);
 
   const handleDelete = async () => {

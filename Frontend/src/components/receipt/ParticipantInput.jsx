@@ -29,10 +29,8 @@ const ParticipantInput = ({ participant, index, onChange, onRemove }) => {
             type="number"
             id={`mealSubtotal-${index}`}
             value={participant.mealSubtotal}
-            onChange={(e) => handleChange('mealSubtotal', parseFloat(e.target.value) || 0)}
+            onChange={(e) => handleChange('mealSubtotal', parseFloat(e.target.value))}
             placeholder="0.00"
-            step="0.01"
-            min="0"
             required
           />
         </div>

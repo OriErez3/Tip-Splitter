@@ -21,14 +21,20 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
   };
 
   const calculateTotal = () => {
-    const subtotal = receipt.participants.reduce((sum, p) => sum + p.mealSubtotal, 0);
-    const total = subtotal + (receipt.appetizerSubtotal || 0) + receipt.tax + receipt.tip;
+    // Calculate subtotal (meals + appetizers)
+    const subtotal = receipt.participants.reduce((sum, p) => sum + p.mealSubtotal, 0) + (receipt.appetizerSubtotal || 0);
+
+    // Tax and tip are now stored as rates, so multiply by subtotal
+    const taxAmount = subtotal * (receipt.tax || 0);
+    const tipAmount = subtotal * (receipt.tip || 0);
+
+    const total = subtotal + taxAmount + tipAmount;
     return total.toFixed(2);
   };
 
-  // Calculate split details
+  // Calculate split details - tax and tip are already rates in the database
   const splitDetails = receipt.participants && receipt.participants.length > 0
-    ? split(receipt.participants, receipt.appetizerSubtotal || 0, receipt.tax / calculateTotal(), receipt.tip / calculateTotal())
+    ? split(receipt.participants, receipt.appetizerSubtotal || 0, receipt.tax || 0, receipt.tip || 0)
     : [];
 
   const togglePerson = (index) => {

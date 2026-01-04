@@ -31,10 +31,12 @@ const ReciptSchema = new mongoose.Schema({
     tax: {
         type: Number,
         required: true
+        // Stored as decimal percentage (e.g., 0.08875 for 8.875%)
     },
     tip: {
         type: Number,
         required: true
+        // Stored as decimal percentage (e.g., 0.20 for 20%)
     },
 },
     { timestamps: true }

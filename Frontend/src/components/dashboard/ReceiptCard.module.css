@@ -1,0 +1,170 @@
+.card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  transition: box-shadow 0.3s, transform 0.3s;
+  margin-bottom: 20px;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.title {
+  margin: 0 0 8px 0;
+  color: #333;
+  font-size: 1.5em;
+  font-weight: 600;
+}
+
+.date {
+  margin: 0;
+  color: #888;
+  font-size: 0.95em;
+}
+
+.total {
+  text-align: right;
+}
+
+.totalLabel {
+  display: block;
+  font-size: 0.85em;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.totalAmount {
+  display: block;
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #667eea;
+}
+
+.divider {
+  height: 2px;
+  background: linear-gradient(to right, #667eea, #764ba2);
+  margin-bottom: 20px;
+}
+
+.participants {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.personContainer {
+  background: #f9f9f9;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.personRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.personRow:hover {
+  background: #f0f0f0;
+}
+
+.personName {
+  font-size: 1.05em;
+  font-weight: 500;
+  color: #333;
+}
+
+.personAmount {
+  font-size: 1.1em;
+  font-weight: 600;
+  color: #667eea;
+}
+
+.breakdown {
+  padding: 15px;
+  background: white;
+  border-top: 1px solid #e0e0e0;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 500px;
+  }
+}
+
+.breakdownRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  font-size: 0.95em;
+  color: #555;
+}
+
+.breakdownRow span:first-child {
+  color: #666;
+}
+
+.breakdownRow span:last-child {
+  font-weight: 500;
+  color: #333;
+}
+
+.breakdownDivider {
+  height: 1px;
+  background: #e0e0e0;
+  margin: 8px 0;
+}
+
+.breakdownTotal {
+  font-weight: 600;
+  font-size: 1.05em;
+  padding-top: 12px;
+}
+
+.breakdownTotal span {
+  color: #667eea;
+}
+
+@media (max-width: 600px) {
+  .card {
+    padding: 20px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .total {
+    text-align: left;
+  }
+
+  .title {
+    font-size: 1.3em;
+  }
+
+  .totalAmount {
+    font-size: 1.5em;
+  }
+}

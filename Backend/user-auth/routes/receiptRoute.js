@@ -4,7 +4,7 @@ const Receipt = require("../models/receipt.js");
 const auth = require("../middleware/authMiddleware.js");
 
 const router = express.Router();
-console.log("✅ receiptRoute.js loaded");
+
 
 router.post("/", auth, async (req, res) => {
     try {

@@ -11,11 +11,11 @@ const CreateReceipt = () => {
   const isEditMode = !!id;
   const [title, setTitle] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
-  const [appetizerSubtotal, setAppetizerSubtotal] = useState(0);
-  const [tax, setTax] = useState(0);
-  const [tip, setTip] = useState(0);
+  const [appetizerSubtotal, setAppetizerSubtotal] = useState('');
+  const [tax, setTax] = useState('');
+  const [tip, setTip] = useState('');
   const [participants, setParticipants] = useState([
-    { name: '', mealSubtotal: 0, includeApps: true }
+    { name: '', mealSubtotal: '', includeApps: true }
   ]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);

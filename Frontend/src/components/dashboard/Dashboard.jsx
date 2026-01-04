@@ -19,7 +19,9 @@ const Dashboard = () => {
   const fetchReceipts = async () => {
     try {
       const data = await receiptService.getMyReceipts();
-      setReceipts(data);
+      // Sort receipts by creation time, newest first
+      const sortedReceipts = data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setReceipts(sortedReceipts);
     } catch (err) {
       setError('Failed to load receipts');
       console.error(err);

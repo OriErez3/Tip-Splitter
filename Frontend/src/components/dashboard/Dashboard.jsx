@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  
   useEffect(() => {
     fetchReceipts();
   }, []);
@@ -24,6 +25,16 @@ const Dashboard = () => {
       console.error(err);
     } finally {
       setLoading(false);
+    }
+  };
+  const handleDeleteReceipt = async (receiptId) => {
+    try {
+      await receiptService.deleteReceipt(receiptId);
+      // Remove from local state to update UI immediately
+      setReceipts(receipts.filter(r => r._id !== receiptId));
+    } catch (err) {
+      setError('Failed to delete receipt');
+      console.error(err);
     }
   };
 
@@ -55,7 +66,7 @@ const Dashboard = () => {
         {!loading && !error && receipts.length > 0 && (
           <div className={styles.grid}>
             {receipts.map((receipt) => (
-              <ReceiptCard key={receipt._id} receipt={receipt} />
+              <ReceiptCard key={receipt._id} receipt={receipt} onDelete={handleDeleteReceipt} />
             ))}
           </div>
         )}

@@ -1,6 +1,6 @@
 const express = require("express");
 const User = require("../models/user.js");
-const Recipt = require("../models/receipt.js");
+const Receipt = require("../models/receipt.js");
 const auth = require("../middleware/authMiddleware.js");
 
 const router = express.Router();
@@ -10,7 +10,7 @@ router.post("/", auth, async (req, res) => {
     try {
         const receiptData = req.body;
 
-        const receipt = await Recipt.create({
+        const receipt = await Receipt.create({
             ...receiptData,
             ownerID: req.user.id,
         });
@@ -24,9 +24,34 @@ router.post("/", auth, async (req, res) => {
     }
 });
 
+router.delete("/:id", auth, async (req,res) =>{
+  try {
+    const receiptID = req.params.id;
+
+    const receipt = await Receipt.findById(receiptID);
+
+    if (!receipt) {
+      return res.status(404).json({ message: "Receipt not found" })
+    }
+
+    if (receipt.ownerID.toString() !== req.user.id){
+      return res.status(403).json({ message: "Not authorized to delete this."})
+    }
+    await Receipt.findByIdAndDelete(receiptID);
+
+    await User.findByIdAndUpdate(req.user.id, {
+      $pull: { receipts: receiptID }
+    });
+
+    res.json({ message: "Receipt deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to delete receipt", err });
+  }
+});
+
 router.get("/mine", auth, async (req, res) => {
   try {
-    const receipts = await Recipt.find({ ownerID: req.user.id })
+    const receipts = await Receipt.find({ ownerID: req.user.id })
       .sort({ date: -1 });
     res.json(receipts);
   } catch (err) {

@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    recipts: [
+    receipts: [
         { type: mongoose.Schema.Types.ObjectId, ref: "Recipt" }
     ],
         

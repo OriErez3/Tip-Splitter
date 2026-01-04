@@ -5,6 +5,12 @@ import styles from './ReceiptCard.module.css';
 const ReceiptCard = ({ receipt }) => {
   const [expandedPerson, setExpandedPerson] = useState(null);
 
+  const handleDelete = async () => {
+    if (window.confirm('Are you sure you want to delete this receipt?')) {
+      await onDelete(receipt._id);
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('en-US', {
@@ -40,6 +46,12 @@ const ReceiptCard = ({ receipt }) => {
           <span className={styles.totalLabel}>Total</span>
           <span className={styles.totalAmount}>${calculateTotal()}</span>
         </div>
+        <button
+        className={styles.deleteBtn}
+        onClick={handleDelete}
+        title="Delete receipt">
+          🗑️
+        </button>
       </div>
 
       <div className={styles.divider}></div>

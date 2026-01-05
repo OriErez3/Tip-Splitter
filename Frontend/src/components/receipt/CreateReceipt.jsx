@@ -10,7 +10,13 @@ const CreateReceipt = () => {
   const { id } = useParams();  
   const isEditMode = !!id;
   const [title, setTitle] = useState('');
-  const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [date, setDate] = useState(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
   const [appetizerSubtotal, setAppetizerSubtotal] = useState('');
   const [tax, setTax] = useState('');
   const [tip, setTip] = useState('');

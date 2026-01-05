@@ -27,6 +27,32 @@ function split(participants, appetizerSubtotal = 0, taxRate = 0, tipRate = 0) {
     };
   });
 
+  // Fix rounding errors by adjusting the person with the smallest total
+  const actualSubtotal = participants.reduce((sum, p) => {
+    const meal = Number(p.mealSubtotal) || 0;
+    const apps = p.includeApps ? appShare : 0;
+    const base = meal + apps;
+    return sum + base;
+  }, 0);
+
+  const calculatedTotal = actualSubtotal * (1 + taxRate + tipRate);
+  const sumOfIndividualTotals = results.reduce((sum, r) => sum + r.total, 0);
+  const difference = round2(calculatedTotal - sumOfIndividualTotals);
+
+  if (difference !== 0) {
+    // Find the person with the smallest total
+    let minIndex = 0;
+    let minTotal = results[0].total;
+    for (let i = 1; i < results.length; i++) {
+      if (results[i].total < minTotal) {
+        minTotal = results[i].total;
+        minIndex = i;
+      }
+    }
+    // Adjust their total
+    results[minIndex].total = round2(results[minIndex].total + difference);
+  }
+
   return results;
 }
 

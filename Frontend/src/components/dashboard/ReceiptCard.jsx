@@ -4,6 +4,7 @@ import styles from './ReceiptCard.module.css';
 
 const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
   const [expandedPeople, setExpandedPeople] = useState(new Set());
+  const [closingPeople, setClosingPeople] = useState(new Set());
 
   const handleDelete = async () => {
     if (window.confirm('Are you sure you want to delete this receipt?')) {
@@ -42,7 +43,21 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
     setExpandedPeople(prev => {
       const newSet = new Set(prev);
       if (newSet.has(index)) {
-        newSet.delete(index);
+        // Start closing animation
+        setClosingPeople(closing => new Set(closing).add(index));
+        // Remove from expanded after animation completes
+        setTimeout(() => {
+          setExpandedPeople(exp => {
+            const updated = new Set(exp);
+            updated.delete(index);
+            return updated;
+          });
+          setClosingPeople(closing => {
+            const updated = new Set(closing);
+            updated.delete(index);
+            return updated;
+          });
+        }, 200); // Match animation duration
       } else {
         newSet.add(index);
       }
@@ -96,8 +111,8 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
               <span className={styles.personAmount}>${person.total.toFixed(2)}</span>
             </div>
 
-            {expandedPeople.has(index) && (
-              <div className={styles.breakdown}>
+            {(expandedPeople.has(index) || closingPeople.has(index)) && (
+              <div className={`${styles.breakdown} ${closingPeople.has(index) ? styles.breakdownClosing : ''}`}>
                 <div className={styles.breakdownRow}>
                   <span>Meal Subtotal</span>
                   <span>${person.mealSubtotal.toFixed(2)}</span>

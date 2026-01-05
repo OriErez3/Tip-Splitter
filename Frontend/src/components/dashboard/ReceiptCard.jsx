@@ -3,6 +3,7 @@ import split from '../../utils/split';
 import styles from './ReceiptCard.module.css';
 
 const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
+  const [isCardExpanded, setIsCardExpanded] = useState(true);
   const [expandedPeople, setExpandedPeople] = useState(new Set());
   const [closingPeople, setClosingPeople] = useState(new Set());
 
@@ -71,9 +72,11 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
 
   return (
     <div className={styles.card}>
-      <div className={styles.header}>
+      <div className={styles.header} onClick={() => setIsCardExpanded(!isCardExpanded)} style={{ cursor: 'pointer' }}>
         <div>
-          <h3 className={styles.title}>{receipt.title}</h3>
+          <h3 className={styles.title}>
+            {isCardExpanded ? '▼' : '▶'} {receipt.title}
+          </h3>
           <p className={styles.date}>{formatDate(receipt.date)}</p>
         </div>
         <div className={styles.headerRight}>
@@ -81,7 +84,7 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
             <span className={styles.totalLabel}>Total</span>
             <span className={styles.totalAmount}>${calculateTotal()}</span>
           </div>
-          <div className={styles.buttonGroup}>
+          <div className={styles.buttonGroup} onClick={(e) => e.stopPropagation()}>
             <button
               className={styles.editBtn}
               onClick={handleEdit}
@@ -98,9 +101,11 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
         </div>
       </div>
 
-      <div className={styles.divider}></div>
+      {isCardExpanded && (
+        <>
+          <div className={styles.divider}></div>
 
-      <div className={styles.participants}>
+          <div className={styles.participants}>
         {splitDetails.map((person, index) => (
           <div key={index} className={styles.personContainer}>
             <div
@@ -143,7 +148,9 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
             )}
           </div>
         ))}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

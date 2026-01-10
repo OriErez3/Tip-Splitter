@@ -19,6 +19,16 @@
   margin-bottom: 20px;
 }
 
+.cardContent {
+  animation: slideDown 0.3s ease-out;
+  overflow: hidden;
+}
+
+.cardContentClosing {
+  animation: slideUp 0.2s ease-out;
+  overflow: hidden;
+}
+
 .title {
   margin: 0 0 8px 0;
   color: #333;

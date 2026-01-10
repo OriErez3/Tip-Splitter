@@ -13,18 +13,14 @@ const receiptService = {
 
   async deleteReceipt(receiptID){
     const response = await api.delete(`/receipts/${receiptID}`)
-    return response.data;
+    return response.data; 
   },
+
 
   async updateReceipt(receiptID, receiptData) {
     const response = await api.put(`/receipts/${receiptID}`, receiptData);
     return response.data;
-  },
-
-  async getReceiptById(receiptID) {
-    const response = await api.get(`/receipts/${receiptID}`);
-    return response.data;
   }
-};
 
+};
 export default receiptService;

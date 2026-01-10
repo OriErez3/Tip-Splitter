@@ -4,6 +4,7 @@ import styles from './ReceiptCard.module.css';
 
 const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
   const [isCardExpanded, setIsCardExpanded] = useState(true);
+  const [isCardClosing, setIsCardClosing] = useState(false);
   const [expandedPeople, setExpandedPeople] = useState(new Set());
   const [closingPeople, setClosingPeople] = useState(new Set());
 
@@ -66,13 +67,26 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
     });
   };
 
+  const toggleCard = () => {
+    if (isCardExpanded) {
+      // Start closing animation
+      setIsCardClosing(true);
+      setTimeout(() => {
+        setIsCardExpanded(false);
+        setIsCardClosing(false);
+      }, 200); // Match animation duration
+    } else {
+      setIsCardExpanded(true);
+    }
+  };
+
   const handleEdit = () => {
     onEdit(receipt._id);
   };
 
   return (
     <div className={styles.card}>
-      <div className={styles.header} onClick={() => setIsCardExpanded(!isCardExpanded)} style={{ cursor: 'pointer' }}>
+      <div className={styles.header} onClick={toggleCard} style={{ cursor: 'pointer' }}>
         <div>
           <h3 className={styles.title}>
             {isCardExpanded ? '▼' : '▶'} {receipt.title}
@@ -101,8 +115,8 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
         </div>
       </div>
 
-      {isCardExpanded && (
-        <>
+      {(isCardExpanded || isCardClosing) && (
+        <div className={isCardClosing ? styles.cardContentClosing : styles.cardContent}>
           <div className={styles.divider}></div>
 
           <div className={styles.participants}>
@@ -149,7 +163,7 @@ const ReceiptCard = ({ receipt, onDelete, onEdit }) => {
           </div>
         ))}
           </div>
-        </>
+        </div>
       )}
     </div>
   );

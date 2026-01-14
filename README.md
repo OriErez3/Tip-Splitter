@@ -3,7 +3,7 @@
 A full-stack web app that helps groups split restaurant receipts by **individual meal totals**, **shared appetizers**, **tax**, and **tip** — with user accounts so you can save and view past receipts.
 
 ## Live Demo
-- Frontend (Vercel): ori-tip-splitter.vercel.app
+- Frontend (Vercel): https://ori-tip-splitter.vercel.app
 - Backend API (Render): https://tip-splitter.onrender.com
 
 ---

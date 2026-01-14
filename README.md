@@ -54,5 +54,3 @@ Algorithm:
 3. Round totals to 2 decimals for display
 
 ---
-
-## Project Structure (example)

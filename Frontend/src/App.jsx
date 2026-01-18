@@ -6,7 +6,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import CreateReceipt from './components/receipt/CreateReceipt';
 import PrivateRoute from './components/common/PrivateRoute';
 import './App.css';
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 function AppRoutes() {
   const { isAuthenticated } = useAuth();
@@ -45,6 +45,7 @@ function AppRoutes() {
       </PrivateRoute>
     } 
   />
+  <Analytics />
     </Routes>
 
     
